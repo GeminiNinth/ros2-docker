@@ -22,23 +22,13 @@ sudo apt-get update
 sudo apt-get install -y docker-ce
 echo ""
 
-# Install NVIDIA Docker 2
-echo "Installing nvidia-docker2"
-curl -fsSL https://nvidia.github.io/nvidia-docker/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-docker-keyring.gpg
-# Add the NVIDIA Docker repository using the keyring
-curl -fsSL https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | \
-    sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-docker-keyring.gpg] https://#' | \
-    sudo tee /etc/apt/sources.list.d/nvidia-docker.list > /dev/null
-sudo apt-get update
-sudo apt-get install -y nvidia-docker2
-sudo systemctl restart docker
-echo ""
-
-# Install Rocker
-echo "Installing rocker"
-sudo apt-get update && sudo apt-get install -y curl gnupg lsb-release
-sudo curl -fsSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(source /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-sudo apt-get update
-sudo apt-get install -y python3-rocker
-echo ""
+# Install NVIDIA Container Toolkit
+echo "Installing NVIDIA Container Toolkit"
+curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
+curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
+sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
+sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
+sudo apt update
+sudo apt install nvidia-container-toolkit -y
+systemctl restart docker.service
+echo "NVIDIA container toolkit installed!"
